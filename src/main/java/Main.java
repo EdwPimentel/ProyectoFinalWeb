@@ -20,10 +20,11 @@ public class Main {
     public static void main(String[] args) throws UnirestException {
         int a = 0;
         Scanner in = new Scanner(System.in);
+        String s="";
         while(a==0) {
 
             System.out.println("Usuario: ");
-            String s = in.nextLine();
+            s = in.nextLine();
 
             System.out.println("Password: ");
             String p = in.nextLine();
@@ -43,21 +44,20 @@ public class Main {
 
 
 
-        System.out.println("Poster: ");
-        String s1 = in.nextLine();
+        System.out.println("\nSe posteara un nuevo post a la cuenta de "+s);
         System.out.println("Texto del post: ");
         String texto = in.nextLine();
         System.out.println("Path imagen a postear (opcional): ");
         String img = in.nextLine();
         if(img.equalsIgnoreCase("")){
-                HttpResponse<String> jsonResponse = Unirest.post("http://localhost:4567/crearPost/"+s1)
+                HttpResponse<String> jsonResponse = Unirest.post("http://localhost:4567/crearPost/"+s)
                         .field("descripcion",texto)
                         .field("myfile","noim")
                         .asString();
 
                 System.out.println(jsonResponse.getBody());
             }else{
-                HttpResponse<String> jsonResponse = Unirest.post("http://localhost:4567/crearPost/"+s1)
+                HttpResponse<String> jsonResponse = Unirest.post("http://localhost:4567/crearPost/"+s)
                         .field("descripcion",texto)
                         .field("myfile",new File(img))
                         .asString();
