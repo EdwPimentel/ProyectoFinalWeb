@@ -18,26 +18,38 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws UnirestException {
-
-        System.out.println("Usuario: ");
+        int a = 0;
         Scanner in = new Scanner(System.in);
+        while(a==0) {
 
-        String s = in.nextLine();
+            System.out.println("Usuario: ");
+            String s = in.nextLine();
 
-        HttpResponse<JsonNode> jsonResponse3 = Unirest.get("http://localhost:4567/listaPost/" + s).asJson();
-        JsonArray jsonObject = new Gson().fromJson(jsonResponse3.getBody().toString(),JsonArray.class);
-        for(int i = 0; i < jsonObject.size(); i++){
-           JsonObject j = jsonObject.get(i).getAsJsonObject();
-           System.out.println("ID= "+j.get("id")+" Descripcion: "+j.get("descripcion"));
+            System.out.println("Password: ");
+            String p = in.nextLine();
+            try { HttpResponse<JsonNode> jsonResponse3 = Unirest.get("http://localhost:4567/listaPost/" + s + "/" + p).asJson();
+                JsonArray jsonObject = new Gson().fromJson(jsonResponse3.getBody().toString(),JsonArray.class);
+                a=1;
+                for(int i = 0; i < jsonObject.size(); i++){
+                    JsonObject j = jsonObject.get(i).getAsJsonObject();
+                    System.out.println("ID= "+j.get("id")+" Descripcion: "+j.get("descripcion"));
+                }
+            }catch (Exception e){
+                System.out.println("User o Pass equivocado");
+                a=0;
+            }
         }
+
+
+
 
         System.out.println("Poster: ");
         String s1 = in.nextLine();
         System.out.println("Texto del post: ");
         String texto = in.nextLine();
         System.out.println("Path imagen a postear (opcional): ");
-        String imgPath = in.nextLine();
-        if(imgPath.equalsIgnoreCase("")){
+        String img = in.nextLine();
+        if(img.equalsIgnoreCase("")){
                 HttpResponse<String> jsonResponse = Unirest.post("http://localhost:4567/crearPost/"+s1)
                         .field("descripcion",texto)
                         .field("myfile","noim")
@@ -45,9 +57,9 @@ public class Main {
 
                 System.out.println(jsonResponse.getBody());
             }else{
-                HttpResponse<String> jsonResponse = Unirest.post("http://localhost:4567/crear/"+s1)
-                        .field("texto",texto)
-                        .field("myfile",new File(imgPath))
+                HttpResponse<String> jsonResponse = Unirest.post("http://localhost:4567/crearPost/"+s1)
+                        .field("descripcion",texto)
+                        .field("myfile",new File(img))
                         .asString();
 
                 System.out.println(jsonResponse.getBody());
